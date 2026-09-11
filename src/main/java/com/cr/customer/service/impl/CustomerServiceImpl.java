@@ -43,6 +43,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
+    /** 客户编号时间格式 */
     private static final DateTimeFormatter NO_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
     private final CustomerMapper customerMapper;
@@ -51,6 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerConverter converter;
 
+    /** 创建客户 */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CustomerCreateResp createCustomer(CustomerCreateReq req) {
@@ -85,11 +87,13 @@ public class CustomerServiceImpl implements CustomerService {
         return resp;
     }
 
+    /** 按客户ID查询客户详情 */
     @Override
     public CustomerResp getCustomer(Long customerId) {
         return converter.toResp(getByIdOrThrow(customerId));
     }
 
+    /** 分页查询客户列表 */
     @Override
     public PageResult<CustomerResp> listCustomers(CustomerQueryReq req) {
         LambdaQueryWrapper<Customer> wrapper = new LambdaQueryWrapper<>();
@@ -116,6 +120,7 @@ public class CustomerServiceImpl implements CustomerService {
         return PageResult.of(list, page.getTotal(), req.getPageNum(), req.getPageSize());
     }
 
+    /** 更新客户信息 */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CustomerUpdateResp updateCustomer(Long customerId, CustomerUpdateReq req) {
@@ -134,6 +139,7 @@ public class CustomerServiceImpl implements CustomerService {
         return resp;
     }
 
+    /** 查询客户360画像 */
     @Override
     public CustomerProfileResp getProfile(Long customerId) {
         Customer customer = getByIdOrThrow(customerId);
@@ -172,6 +178,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .build();
     }
 
+    /** 为客户添加标签 */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void addTags(Long customerId, CustomerTagReq req) {
@@ -180,6 +187,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerMapper.updateById(customer);
     }
 
+    /** 创建/更新渠道信息，存在则更新，不存在则创建 */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ChannelCreateResp saveChannel(ChannelCreateReq req) {
@@ -207,6 +215,7 @@ public class CustomerServiceImpl implements CustomerService {
         return resp;
     }
 
+    /** 按ID查询客户，不存在则抛出业务异常 */
     private Customer getByIdOrThrow(Long customerId) {
         if (customerId == null) {
             throw new BizException(ResultCode.BAD_REQUEST, "客户ID不能为空");
@@ -218,6 +227,7 @@ public class CustomerServiceImpl implements CustomerService {
         return customer;
     }
 
+    /** 生成唯一客户编号：CUS+时间戳+随机数 */
     private String generateCustomerNo() {
         String no = "CUS" + LocalDateTime.now().format(NO_FORMATTER) + ThreadLocalRandom.current().nextInt(1000, 9999);
         Long count = customerMapper.selectCount(

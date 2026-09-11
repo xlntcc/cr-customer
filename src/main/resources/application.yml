@@ -1,29 +1,65 @@
+# 服务端口
 server:
   port: 8001
 
 spring:
   application:
+    # 应用名称，注册到Nacos并作为Feign服务名
     name: customer-service
+  cloud:
+    nacos:
+      # Nacos注册中心地址
+      server-addr: localhost:8848
+      discovery:
+        # 命名空间
+        namespace: public
+        # 服务分组
+        group: DEFAULT_GROUP
   datasource:
+    # 数据库驱动
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/car_rental?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    # 数据库连接地址
+    url: jdbc:mysql://localhost:3306/cr-customer?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    # 数据库用户名
     username: root
+    # 数据库密码
     password: root
   jackson:
+    # 日期序列化格式
     date-format: yyyy-MM-dd HH:mm:ss
+    # 时区
     time-zone: Asia/Shanghai
 
 mybatis-plus:
   configuration:
+    # 下划线转驼峰
     map-underscore-to-camel-case: true
+    # SQL日志输出到控制台
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
+      # 逻辑删除字段
       logic-delete-field: deleted
+      # 已删除值
       logic-delete-value: 1
+      # 未删除值
       logic-not-delete-value: 0
+  # XML映射文件位置
   mapper-locations: classpath*:mapper/**/*.xml
+
+feign:
+  circuitbreaker:
+    # 开启Feign熔断降级
+    enabled: true
+  client:
+    config:
+      default:
+        # 连接超时(毫秒)
+        connect-timeout: 3000
+        # 读取超时(毫秒)
+        read-timeout: 10000
 
 logging:
   level:
+    # 客户服务包日志级别
     com.cr.customer: debug

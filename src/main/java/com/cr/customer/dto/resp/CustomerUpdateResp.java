@@ -8,9 +8,12 @@ import lombok.Data;
 @Data
 public class CustomerUpdateResp {
 
+    /** 客户ID */
     private String customerId;
 
+    /** 客户编号 */
     private String customerNo;
 
+    /** 更新时间 */
     private String updatedAt;
 }

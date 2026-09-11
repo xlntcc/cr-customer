@@ -17,17 +17,24 @@ import com.cr.customer.dto.resp.CustomerUpdateResp;
  */
 public interface CustomerService {
 
+    /** 创建客户 */
     CustomerCreateResp createCustomer(CustomerCreateReq req);
 
+    /** 按客户ID查询客户详情 */
     CustomerResp getCustomer(Long customerId);
 
+    /** 分页查询客户列表 */
     PageResult<CustomerResp> listCustomers(CustomerQueryReq req);
 
+    /** 更新客户信息 */
     CustomerUpdateResp updateCustomer(Long customerId, CustomerUpdateReq req);
 
+    /** 查询客户360画像 */
     CustomerProfileResp getProfile(Long customerId);
 
+    /** 为客户添加标签 */
     void addTags(Long customerId, CustomerTagReq req);
 
+    /** 创建/更新渠道信息 */
     ChannelCreateResp saveChannel(ChannelCreateReq req);
 }

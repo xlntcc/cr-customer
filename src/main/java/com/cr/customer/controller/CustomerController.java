@@ -33,38 +33,45 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    /** 创建客户 */
     @PostMapping
     public Result<CustomerCreateResp> createCustomer(@Valid @RequestBody CustomerCreateReq req) {
         return Result.success(customerService.createCustomer(req));
     }
 
+    /** 查询客户详情 */
     @GetMapping("/{customerId}")
     public Result<CustomerResp> getCustomer(@PathVariable Long customerId) {
         return Result.success(customerService.getCustomer(customerId));
     }
 
+    /** 分页查询客户列表 */
     @PostMapping("/list")
     public Result<PageResult<CustomerResp>> listCustomers(@RequestBody CustomerQueryReq req) {
         return Result.success(customerService.listCustomers(req));
     }
 
+    /** 更新客户信息 */
     @PutMapping("/{customerId}")
     public Result<CustomerUpdateResp> updateCustomer(@PathVariable Long customerId,
                                                      @Valid @RequestBody CustomerUpdateReq req) {
         return Result.success(customerService.updateCustomer(customerId, req));
     }
 
+    /** 查询客户360画像 */
     @GetMapping("/{customerId}/profile")
     public Result<CustomerProfileResp> getProfile(@PathVariable Long customerId) {
         return Result.success(customerService.getProfile(customerId));
     }
 
+    /** 为客户添加标签 */
     @PostMapping("/{customerId}/tags")
     public Result<Void> addTags(@PathVariable Long customerId, @Valid @RequestBody CustomerTagReq req) {
         customerService.addTags(customerId, req);
         return Result.success();
     }
 
+    /** 创建/更新渠道信息 */
     @PostMapping("/channels")
     public Result<ChannelCreateResp> saveChannel(@Valid @RequestBody ChannelCreateReq req) {
         return Result.success(customerService.saveChannel(req));

@@ -13,7 +13,6 @@ import com.cr.customer.dto.resp.CustomerResp;
 import com.cr.customer.entity.Customer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ public class CustomerConverter {
 
     private final ObjectMapper objectMapper;
 
+    /** 实体转响应对象，证件号/手机号脱敏 */
     public CustomerResp toResp(Customer customer) {
         if (customer == null) {
             return null;
@@ -55,6 +55,7 @@ public class CustomerConverter {
         return resp;
     }
 
+    /** 解析标签JSON为列表 */
     public List<String> parseTags(String tagsJson) {
         if (!StringUtils.hasText(tagsJson)) {
             return Collections.emptyList();
@@ -67,6 +68,7 @@ public class CustomerConverter {
         }
     }
 
+    /** 标签列表序列化为JSON */
     public String writeTags(List<String> tags) {
         try {
             return objectMapper.writeValueAsString(tags);
@@ -75,6 +77,7 @@ public class CustomerConverter {
         }
     }
 
+    /** 证件号码脱敏，保留前4后4 */
     public String maskIdNumber(String idNumber) {
         if (!StringUtils.hasText(idNumber)) {
             return null;
@@ -85,6 +88,7 @@ public class CustomerConverter {
         return idNumber.substring(0, 4) + "****" + idNumber.substring(idNumber.length() - 4);
     }
 
+    /** 手机号脱敏，保留前3后4 */
     public String maskPhone(String phone) {
         if (!StringUtils.hasText(phone)) {
             return null;
@@ -95,6 +99,7 @@ public class CustomerConverter {
         return phone.substring(0, 3) + "****" + phone.substring(phone.length() - 4);
     }
 
+    /** 合并追加标签，自动去重 */
     public void appendTags(Customer customer, List<String> newTags) {
         List<String> merged = new ArrayList<>(parseTags(customer.getTags()));
         newTags.stream().filter(StringUtils::hasText).forEach(tag -> {

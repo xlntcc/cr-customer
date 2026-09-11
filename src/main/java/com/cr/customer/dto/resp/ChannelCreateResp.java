@@ -8,9 +8,12 @@ import lombok.Data;
 @Data
 public class ChannelCreateResp {
 
+    /** 渠道ID */
     private String channelId;
 
+    /** 渠道编码 */
     private String channelCode;
 
+    /** 创建时间 */
     private String createdAt;
 }

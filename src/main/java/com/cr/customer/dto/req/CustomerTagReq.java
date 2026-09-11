@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 public class CustomerTagReq {
 
+    /** 标签列表 */
     @NotEmpty(message = "标签列表不能为空")
     private List<String> tags;
 }
